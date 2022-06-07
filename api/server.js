@@ -5,7 +5,7 @@ var mysql = require('mysql');
 
 app.use(cors());
 
-var con = mysql.createConnection({
+var pool = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASS,
@@ -13,9 +13,13 @@ var con = mysql.createConnection({
 });
 
 app.get('/', (req, res)=> {
-  con.query("SELECT * FROM items", function (err, result, fields) {
+  pool.getConnection(function(err, connection) {
     if (err) throw err;
-    res.json({items: result.map(v => Object.assign({}, v))});
+    connection.query("SELECT * FROM items", function (error, result, fields) {
+      connection.release();
+      if (error) throw error;
+      res.json({items: result.map(v => Object.assign({}, v))});
+    });
   });
 });
 
