@@ -25,7 +25,7 @@ cat << EOF | mysql
 create database plantshop;
 use plantshop;
 
-drop table items;
+drop table if exists items;
 create table items (
   id int not null auto_increment,
   name varchar(255) not null,
