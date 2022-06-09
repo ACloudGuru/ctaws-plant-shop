@@ -19,7 +19,8 @@ wget https://dev.mysql.com/get/mysql-apt-config_0.8.22-1_all.deb
 dpkg --install mysql-apt-config_0.8.22-1_all.deb
 
 apt update
-apt install -y -f mysql-client=5.7* mysql-community-server=5.7* mysql-server=5.7*
+apt install -y --allow-downgrades -f mysql-client=5.7* mysql-community-server=5.7* mysql-server=5.7*
+apt-mark hold mysql-client mysql-community-server mysql-server
 until echo "show databases;" | mysql; do sleep 5; done
 cat << EOF | mysql
 create database plantshop;
@@ -49,6 +50,7 @@ EOF
 curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
 apt update
 apt install -y nodejs=18.3.0-deb-1nodesource1
+apt-mark hold nodejs=18.3.0-deb-1nodesource1
 
 cd /opt
 rm -rf ctaws-plant-shop
